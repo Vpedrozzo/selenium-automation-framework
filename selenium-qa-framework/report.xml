@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="27" time="244.934" timestamp="2025-07-25T17:14:12.878857-03:00" hostname="DESKTOP-3V42CHG"><testcase classname="tests.test_data_driven.TestLoginDataDriven" name="test_login_com_diferentes_credenciais[tomsmith-SuperSecretPassword!-True]" time="10.325" /><testcase classname="tests.test_data_driven.TestLoginDataDriven" name="test_login_com_diferentes_credenciais[admin-SuperSecretPassword!-False]" time="8.769" /><testcase classname="tests.test_data_driven.TestLoginDataDriven" name="test_login_com_diferentes_credenciais[tomsmith-senha123-False]" time="8.836" /><testcase classname="tests.test_data_driven.TestLoginDataDriven" name="test_login_com_diferentes_credenciais[-SuperSecretPassword!-False]" time="8.882" /><testcase classname="tests.test_data_driven.TestLoginDataDriven" name="test_login_com_diferentes_credenciais[tomsmith--False]" time="9.222" /><testcase classname="tests.test_data_driven.TestLoginDataDriven" name="test_login_com_diferentes_credenciais[--False]" time="8.638" /><testcase classname="tests.test_data_driven.TestLoginDataDriven" name="test_login_com_diferentes_credenciais[user@test.com-SuperSecretPassword!-False]" time="8.353" /><testcase classname="tests.test_data_driven.TestLoginComCenarios" name="test_usuario_valido" time="8.643" /><testcase classname="tests.test_data_driven.TestLoginComCenarios" name="test_usuario_inexistente" time="8.721" /><testcase classname="tests.test_data_driven.TestLoginComCenarios" name="test_senha_incorreta" time="8.659" /><testcase classname="tests.test_data_driven.TestLoginComCenarios" name="test_tentativa_sql_injection" time="8.691" /><testcase classname="tests.test_data_driven.TestLoginComCenarios" name="test_tentativa_xss" time="8.712" /><testcase classname="tests.test_data_driven.TestLoginDadosExternos" name="test_todos_cenarios_do_arquivo" time="21.732"><failure message="AssertionError: Cenário 'Admin Falso' deveria falhar&#10;assert False&#10; +  where False = login_falhou()&#10; +    where login_falhou = &lt;pages.login_page.LoginPage object at 0x00000145623397F0&gt;.login_falhou">self = &lt;test_data_driven.TestLoginDadosExternos object at 0x00000145622EC2D0&gt;
+driver = &lt;selenium.webdriver.chrome.webdriver.WebDriver (session="36ad0cccd45961ad495c0eec04e1b99a")&gt;
+dados_do_arquivo = [{'deve_passar': True, 'nome': 'Teste Básico', 'pwd': 'SuperSecretPassword!', 'user': 'tomsmith'}, {'deve_passar': Fal...tomsmith '}, {'deve_passar': False, 'nome': 'Senha com Caracteres Especiais', 'pwd': '!@#$%^&amp;*()', 'user': 'tomsmith'}]
+
+    def test_todos_cenarios_do_arquivo(self, driver, dados_do_arquivo):
+        """
+        EXPLICAÇÃO:
+        Testa todos os cenários que vieram do "arquivo externo"
+        Como seguir uma lista de instruções passo a passo
+        """
+    
+        login_page = LoginPage(driver)
+    
+        for cenario in dados_do_arquivo:
+            print(f"\n#x1F4C1 Executando: {cenario['nome']}")
+    
+            # Navegar para login (caso não esteja lá)
+            login_page.navegar_para_login()
+    
+            # Executar login com dados do cenário
+            login_page.fazer_login(cenario['user'], cenario['pwd'])
+    
+            # Verificar resultado
+            if cenario['deve_passar']:
+                assert login_page.login_foi_bem_sucedido(), f"Cenário '{cenario['nome']}' deveria passar"
+                print(f"✅ {cenario['nome']}: PASSOU")
+                # Fazer logout para próximo teste
+                if login_page.botao_logout_esta_visivel():
+                    login_page.fazer_logout()
+            else:
+&gt;               assert login_page.login_falhou(), f"Cenário '{cenario['nome']}' deveria falhar"
+E               AssertionError: Cenário 'Admin Falso' deveria falhar
+E               assert False
+E                +  where False = login_falhou()
+E                +    where login_falhou = &lt;pages.login_page.LoginPage object at 0x00000145623397F0&gt;.login_falhou
+
+tests\test_data_driven.py:193: AssertionError</failure></testcase><testcase classname="tests.test_data_driven.TestLoginAvancado" name="test_variantes_de_login[V\xe1lidas]" time="8.794" /><testcase classname="tests.test_data_driven.TestLoginAvancado" name="test_variantes_de_login[Username_Mai\xfasculo]" time="8.727" /><testcase classname="tests.test_data_driven.TestLoginAvancado" name="test_variantes_de_login[Senha_Mai\xfascula]" time="8.756" /><testcase classname="tests.test_data_driven.TestLoginAvancado" name="test_variantes_de_login[Username_com_Espa\xe7o]" time="8.811" /><testcase classname="tests.test_data_driven.TestLoginAvancado" name="test_variantes_de_login[Senha_com_Espa\xe7os]" time="8.749" /><testcase classname="tests.test_data_driven.TestLoginAvancado" name="test_variantes_de_login[Username_com_N\xfameros]" time="8.675" /><testcase classname="tests.test_data_driven.TestLoginAvancado" name="test_variantes_de_login[Credenciais_Fracas]" time="8.631" /><testcase classname="tests.test_data_driven.TestLoginAvancado" name="test_variantes_de_login[Usu\xe1rio_Gen\xe9rico]" time="8.735" /><testcase classname="tests.test_data_driven.TestPerfisDeUsuario" name="test_acesso_por_perfil[usuario_comum]" time="8.767" /><testcase classname="tests.test_login_navigation" name="test_navigate_to_login" time="6.332" /><testcase classname="tests.test_primeiro_exemplo" name="test_abrir_google_basico" time="10.283" /><testcase classname="tests.test_primeiro_exemplo" name="test_buscar_google_wait_robusto" time="6.514" /><testcase classname="tests.test_primeiro_exemplo" name="test_site_confiavel_para_testes" time="6.504" /><testcase classname="tests.test_primeiro_exemplo" name="test_debug_google_elementos" time="8.035" /></testsuite></testsuites>
