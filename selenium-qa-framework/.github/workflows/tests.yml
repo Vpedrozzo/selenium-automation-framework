@@ -1,0 +1,216 @@
+# .github/workflows/tests.yml
+# Configuração do GitHub Actions para automação de testes
+
+name: 🧪 Selenium Tests
+
+# Quando executar os testes
+on:
+  push:
+    branches: [ main, develop ]    # Toda vez que enviar código para main ou develop
+  pull_request:
+    branches: [ main ]            # Toda vez que alguém sugerir mudança
+  schedule:
+    - cron: '0 9 * * 1'          # Toda segunda-feira às 9h (UTC) - teste automatico semanal
+
+# Configurações globais
+env:
+  PYTHONPATH: ${{ github.workspace }}
+
+jobs:
+  
+  # Job 1: Testes básicos e rápidos
+  quick-tests:
+    name: 🚀 Testes Rápidos
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 1. Baixar o código do repositório
+    - name: 📥 Checkout do código
+      uses: actions/checkout@v4
+    
+    # 2. Configurar Python
+    - name: 🐍 Configurar Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    # 3. Cache de dependências (acelera execução)
+    - name: 📦 Cache das dependências
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    # 4. Instalar dependências
+    - name: 🔧 Instalar dependências
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    # 5. Executar testes básicos
+    - name: 🧪 Executar testes básicos
+      run: |
+        pytest tests/test_primeiro_exemplo_CORRIGIDO.py::test_site_confiavel_para_testes \
+               --headless \
+               -v \
+               --tb=short \
+               --junit-xml=reports/junit-quick.xml
+    
+    # 6. Upload dos resultados
+    - name: 📊 Upload resultados básicos
+      uses: actions/upload-artifact@v3
+      if: always()  # Sempre faz upload, mesmo se teste falhar
+      with:
+        name: quick-test-results
+        path: |
+          reports/
+          screenshots/
+        retention-days: 30
+
+  # Job 2: Testes completos com múltiplos browsers
+  full-tests:
+    name: 🌐 Testes Completos - ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    needs: quick-tests  # Só roda se testes básicos passarem
+    
+    strategy:
+      fail-fast: false  # Continua testando outros browsers mesmo se um falhar
+      matrix:
+        browser: ['chrome', 'firefox']
+    
+    steps:
+    - name: 📥 Checkout do código
+      uses: actions/checkout@v4
+    
+    - name: 🐍 Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    # Configurar browsers
+    - name: 🌐 Configurar Chrome
+      if: matrix.browser == 'chrome'
+      uses: browser-actions/setup-chrome@latest
+      with:
+        chrome-version: stable
+    
+    - name: 🦊 Configurar Firefox
+      if: matrix.browser == 'firefox'
+      uses: browser-actions/setup-firefox@latest
+      with:
+        firefox-version: latest
+    
+    - name: 📦 Instalar dependências
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    # Executar suite completa de testes
+    - name: 🧪 Executar testes data-driven
+      run: |
+        pytest tests/test_data_driven.py \
+               --browser=${{ matrix.browser }} \
+               --headless \
+               -v \
+               --html=reports/report-${{ matrix.browser }}.html \
+               --self-contained-html \
+               --junit-xml=reports/junit-${{ matrix.browser }}.xml
+    
+    - name: 📊 Upload relatórios por browser
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results-${{ matrix.browser }}
+        path: |
+          reports/
+          screenshots/
+
+  # Job 3: Testes de demonstração (para recrutadores)
+  demo-tests:
+    name: 🎯 Testes de Demonstração
+    runs-on: ubuntu-latest
+    needs: quick-tests
+    
+    steps:
+    - name: 📥 Checkout do código
+      uses: actions/checkout@v4
+    
+    - name: 🐍 Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: 🌐 Configurar Chrome
+      uses: browser-actions/setup-chrome@latest
+    
+    - name: 📦 Instalar dependências
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: 🎪 Executar testes de demonstração
+      run: |
+        pytest tests/test_demonstracao_recrutador.py::TestDemonstracaoParaRecrutador::test_sites_populares_para_demo \
+               --headless \
+               -v \
+               -s \
+               --html=reports/demo-report.html \
+               --self-contained-html
+    
+    - name: 📊 Upload relatório de demonstração
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: demo-results
+        path: reports/demo-report.html
+
+  # Job 4: Relatório final consolidado
+  final-report:
+    name: 📋 Relatório Consolidado
+    runs-on: ubuntu-latest
+    needs: [quick-tests, full-tests, demo-tests]
+    if: always()  # Roda mesmo se alguns testes falharem
+    
+    steps:
+    - name: 📥 Baixar todos os artifacts
+      uses: actions/download-artifact@v3
+    
+    - name: 📊 Gerar resumo dos testes
+      run: |
+        echo "# 📊 Resumo da Execução dos Testes" > test-summary.md
+        echo "" >> test-summary.md
+        echo "## 🎯 Testes Executados:" >> test-summary.md
+        echo "- ✅ Testes Básicos" >> test-summary.md
+        echo "- 🌐 Testes Chrome/Firefox" >> test-summary.md
+        echo "- 🎪 Testes de Demonstração" >> test-summary.md
+        echo "" >> test-summary.md
+        echo "## 📁 Artefatos Gerados:" >> test-summary.md
+        ls -la
+        echo "" >> test-summary.md
+        echo "**Data:** $(date)" >> test-summary.md
+        echo "**Commit:** ${{ github.sha }}" >> test-summary.md
+    
+    - name: 📤 Upload resumo final
+      uses: actions/upload-artifact@v3
+      with:
+        name: final-test-summary
+        path: test-summary.md
+
+# Configurações de notificação (opcional)
+# Descomente se quiser receber notificações por email
+#  notify:
+#    name: 📧 Notificações
+#    runs-on: ubuntu-latest
+#    needs: [final-report]
+#    if: always()
+#    
+#    steps:
+#    - name: 📧 Enviar notificação de sucesso
+#      if: success()
+#      run: echo "✅ Todos os testes passaram!"
+#    
+#    - name: 📧 Enviar notificação de falha
+#      if: failure()
+#      run: echo "❌ Alguns testes falharam!"
