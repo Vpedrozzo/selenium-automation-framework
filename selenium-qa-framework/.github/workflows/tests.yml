@@ -1,13 +1,12 @@
 name: 🧪 Selenium Tests
 
-# Quando executar os testes
 on:
   push:
-    branches: [ main, develop ]    # Toda vez que enviar código para main ou develop
+    branches: [ main, develop ]   
   pull_request:
-    branches: [ main ]            # Toda vez que alguém sugerir mudança
+    branches: [ main ]          
   schedule:
-    - cron: '0 9 * * 1'          # Toda segunda-feira às 9h (UTC) - teste automatico semanal
+    - cron: '0 9 * * 1'        
 
 # Configurações globais
 env:

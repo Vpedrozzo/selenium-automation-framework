@@ -1,5 +1,4 @@
 [![Tests](https://github.com/Vpedrozzo/selenium-automation-framework/workflows/🧪%20Selenium%20Tests/badge.svg)](https://github.com/Vpedrozzo/selenium-automation-framework/actions)
-
 # 🎯 Selenium Test Automation Framework
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
