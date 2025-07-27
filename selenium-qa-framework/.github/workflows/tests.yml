@@ -1,16 +1,12 @@
-# .github/workflows/tests.yml
-# Configuração do GitHub Actions para automação de testes
-
 name: 🧪 Selenium Tests
 
-# Quando executar os testes
 on:
   push:
-    branches: [ main, develop ]    # Toda vez que enviar código para main ou develop
+    branches: [ main, develop ]   
   pull_request:
-    branches: [ main ]            # Toda vez que alguém sugerir mudança
+    branches: [ main ]          
   schedule:
-    - cron: '0 9 * * 1'          # Toda segunda-feira às 9h (UTC) - teste automatico semanal
+    - cron: '0 9 * * 1'        
 
 # Configurações globais
 env:
@@ -197,20 +193,3 @@ jobs:
       with:
         name: final-test-summary
         path: test-summary.md
-
-# Configurações de notificação (opcional)
-# Descomente se quiser receber notificações por email
-#  notify:
-#    name: 📧 Notificações
-#    runs-on: ubuntu-latest
-#    needs: [final-report]
-#    if: always()
-#    
-#    steps:
-#    - name: 📧 Enviar notificação de sucesso
-#      if: success()
-#      run: echo "✅ Todos os testes passaram!"
-#    
-#    - name: 📧 Enviar notificação de falha
-#      if: failure()
-#      run: echo "❌ Alguns testes falharam!"
