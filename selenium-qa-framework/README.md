@@ -26,7 +26,7 @@ Em 2024, **70% dos bugs em produção** poderiam ser evitados com testes automat
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/selenium-automation-framework.git
+git clone https://github.com/Vpedrozzo/selenium-automation-framework.git
 cd selenium-automation-framework
 
 # Instale as dependências
@@ -92,7 +92,7 @@ pytest tests/ --html=reports/report.html --self-contained-html
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/seu-usuario/selenium-automation-framework.git
+git clone https://github.com/Vpedrozzo/selenium-automation-framework.git
 cd selenium-automation-framework
 
 # 2. Crie ambiente virtual (recomendado)
@@ -108,14 +108,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # 5. Execute teste de verificação
-pytest tests/test_primeiro_exemplo_CORRIGIDO.py::test_abrir_google_basico -v
+pytest tests/test_primeiro_exemplo.py::test_abrir_google_basico -v
 ```
 
 ### **Verificação da Instalação**
 
 ```bash
 # Teste básico que deve sempre funcionar
-pytest tests/test_primeiro_exemplo_CORRIGIDO.py::test_site_confiavel_para_testes -v -s
+pytest tests/test_primeiro_exemplo.py::test_site_confiavel_para_testes -v -s
 
 # Se passou = instalação OK! ✅
 ```
@@ -176,7 +176,7 @@ selenium-automation-framework/
 │   └── site_generico_page.py          # Page Object adaptável a qualquer site
 ├── 📁 tests/                           # Casos de teste
 │   ├── __init__.py
-│   ├── test_primeiro_exemplo_CORRIGIDO.py    # Testes básicos
+│   ├── test_primeiro_exemplo.py              # Testes básicos
 │   ├── test_data_driven.py            # Testes com múltiplos dados
 │   └── test_demonstracao_recrutador.py # Testes para demonstração
 ├── 📁 reports/                         # Relatórios e screenshots
